@@ -1,16 +1,21 @@
-# Snope_API
+# Snope API
 This repo is the backend for a shoveling for hire service. 
 
 #How to install
 Prerequisites:
+
 -nodeJS
+
 -npm
+
+-MongoDB
 
 Clone this github repo:
 
 git clone https://github.com/codeforboston/Snope_API
 
 To install dependencies:
+
 From the root folder (containing package.json) - run:
 
 npm install
