@@ -39,6 +39,9 @@ router.use(function(req, res, next) {
 // Add headers
 router.use(function (req, res, next) {
 
+    //***********************************
+    //TODO: REMOVE THIS BEFORE PRODUCTION
+    //***********************************
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
