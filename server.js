@@ -22,6 +22,44 @@ var port = 8080;
 // =============================================================================
 var router = express.Router();
 
+// app.all('/', function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//   next();
+//  });
+
+
+// middleware to use for all requests
+router.use(function(req, res, next) {
+    // do logging / anything else that happens in middewareOPTIONS
+    console.log('Something is happening.');
+    next();
+});
+
+// Add headers
+router.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
+
+// REGISTER ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
 
 //Set up the Users API
 var userAPI = require('./app/api/userAPI');
@@ -30,17 +68,6 @@ userAPI.setupUsersAPI(router);
 //Set up the Jobs API
 var jobAPI = require('./app/api/jobAPI');
 jobAPI.setupJobsAPI(router);
-
-// middleware to use for all requests
-router.use(function(req, res, next) {
-    // do logging / anything else that happens in middeware
-    console.log('Something is happening.');
-    next();
-});
-
-// REGISTER ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
 
 // Start the server
 app.listen(port);
