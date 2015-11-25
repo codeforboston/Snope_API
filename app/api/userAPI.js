@@ -10,27 +10,39 @@ router.route('/users')
     // create a user (accessed at POST /api/users)
     .post(function(req, res) {
 
-        var user = new User();      // create a new instance of the User model
+        var user = new User(); // create a new instance of the User model
 
-        user.name = req.body.name;  // set the user's name (comes from the request)
-        user.password = req.body.password;
-        user.type = req.body.type;
+        //Map all of the user properties from the request to our user object:
+        user.username    = req.body.username;
+        user.firstName   = req.body.firstName;
+        user.lastName    = req.body.lastName;
+        user.phoneNumber = req.body.phoneNumber;
+        user.address     = req.body.address;
+        user.type        = req.body.type;
+        user.password    = req.body.password;
 
         // save the user and check for errors
         user.save(function(err) {
             if (err){
-                res.send(err);
+                res.json({
+                  statusCode : 500,
+                  message    : 'There was a problem creating a new user Account.'
+                });
               }
-            res.json({ message: 'User successfully created!' });
+            res.json({
+              statusCode : 200,
+              message: 'User Account Successfully created!'
+            });
         });
 
     })
 
-    //Return all users
+    //Return all users//Shoveler or Customer
     .get(function(req, res) {
         User.find(function(err, users) {
-            if (err)
-                res.send(err);
+            if (err){
+              res.send(err);
+            }
             res.json(users);
         });
     });
