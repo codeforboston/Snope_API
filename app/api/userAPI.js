@@ -66,19 +66,27 @@ router.route('/users')
           // use our user model to find the user we want
           User.findById(req.params.user_id, function(err, user) {
 
-              if (err)
+            if (err){
+                res.send(err);
+              }
+
+            //Grab all fields from the request and if present, update our user.
+            if(req.body.username) user.username = req.body.username;
+            if(req.body.firstName) user.firstName = req.body.firstName;
+            if(req.body.lastName) user.lastName = req.body.lastName;
+            if(req.body.phoneNumber) user.phoneNumber = req.body.phoneNumber;
+            if(req.body.address) user.address = req.body.address;
+            if(req.body.type) user.type = req.body.type;
+            if(req.body.password) user.password = req.body.password;
+
+            // save the user
+            user.save(function(err) {
+                if (err){
                   res.send(err);
+                }
 
-              user.name = req.body.name;  // update the users info
-
-              // save the user
-              user.save(function(err) {
-                  if (err){
-                    res.send(err);
-                  }
-
-                  res.json({ message: 'User successfully updated!' });
-              });
+                res.json({ message: 'User successfully updated!' });
+            });
 
           });
       })
