@@ -57,13 +57,13 @@ setupJobsAPI : function(router){
                     res.send(err);
                 }
 
-                job.customerId = req.body.customerId;
-                job.shovelerId = req.body.shovelerId;
-                job.latitude = req.body.latitude;
-                job.longitude = req.body.longitude;
-                job.confirmationCode = req.body.confirmationCode;
-                job.creationTime = req.body.creationTime;
-                job.completionTime = req.body.completionTime;
+                if(req.body.customerId) job.customerId = req.body.customerId;
+                if(req.body.shovelerId) job.shovelerId = req.body.shovelerId;
+                if(req.body.latitude) job.latitude = req.body.latitude;
+                if(req.body.longitude) job.longitude = req.body.longitude;
+                if(req.body.confirmationCode) job.confirmationCode = req.body.confirmationCode;
+                if(req.body.creationTime) job.creationTime = req.body.creationTime;
+                if(req.body.completionTime) job.completionTime = req.body.completionTime;
 
                 // save the job
                 job.save(function(err) {
