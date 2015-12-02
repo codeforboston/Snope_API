@@ -6,9 +6,13 @@ var JobSchema   = new Schema({
     shovelerId: String,
     latitude: String,
     longitude: String,
+    address: String,
+    price: Number,
+    notes: String,
     confirmationCode: String,
     creationTime: { type: Date, default: Date.now },
-    completionTime: Date
+    completionTime: Date,
+    phoneNumber: String
 });
 
 module.exports = mongoose.model('Job', JobSchema);
