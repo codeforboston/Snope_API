@@ -12,6 +12,7 @@ var JobSchema   = new Schema({
     confirmationCode: String,
     creationTime: { type: Date, default: Date.now },
     completionTime: Date,
+    imgUrl: String,
     phoneNumber: String
 });
 

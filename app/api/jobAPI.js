@@ -72,7 +72,8 @@ setupJobsAPI : function(router){
                 if(req.body.creationTime) job.creationTime = req.body.creationTime;
                 if(req.body.completionTime) job.completionTime = req.body.completionTime;
                 if(req.body.phoneNumber) job.phoneNumber = req.body.phoneNumber;
-
+                if(req.body.imgUrl) job.imgUrl = req.body.imgUrl;
+                
                 // save the job
                 job.save(function(err) {
                     if (err){
