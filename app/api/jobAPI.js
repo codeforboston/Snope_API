@@ -31,6 +31,7 @@ setupJobsAPI : function(router){
               if (err){
                   res.send(err);
                 }
+                //TODO: Send newjobId back in response
               res.json({ message: 'Job successfully created!' });
           });
 
