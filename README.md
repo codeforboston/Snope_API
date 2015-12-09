@@ -25,3 +25,7 @@ npm install
 After installation, you should be able to run the server by going to the root folder (containing package.json) and entering:
 
 node server.js
+
+or, with optional port number:
+
+node server.js 8888

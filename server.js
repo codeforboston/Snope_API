@@ -14,9 +14,17 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-//TODO: Make port configurable
-//Set the port that our node app runs on
+// If adding any more arguments, consider yargs
+// Set the port that our node app runs on
 var port = 8080;
+if (process.argv.length > 1) {
+    var port2 = parseInt(process.argv[2])
+    if (port2 > 0) {
+        port = port2
+    } else {
+        console.log('Not running on port:',process.argv[2])
+    }
+}
 
 // ROUTES FOR OUR API
 // =============================================================================
