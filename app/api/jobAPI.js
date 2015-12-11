@@ -19,8 +19,7 @@ setupJobsAPI : function(router){
           job.notes = req.body.notes;
           job.phoneNumber = req.body.phoneNumber;
 
-          // TODO: Generate this and send it in response
-          // job.confirmationCode = req.body.confirmationCode;
+          job.confirmationCode = generateConfirmationCode();
 
           // TODO: Get Lat/Long from Google Maps?
           // job.latitude = req.body.latitude;
@@ -188,6 +187,21 @@ setupJobsAPI : function(router){
           //Create ourselves a .toRadians() function for simplicty
           function toRadians(degrees){
             return degrees * Math.PI / 180;
+          }
+
+          //Create ourselves a .toRadians() function for simplicty
+          function generateConfirmationCode()
+          {
+              var text = "";
+              var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+              var possibleNums  = "0123456789";
+
+              text += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+              for( var i=0; i < 3; i++ ){
+                text += possibleNums.charAt(Math.floor(Math.random() * possibleNums.length));
+              }
+
+              return text;
           }
 
     }
