@@ -139,11 +139,24 @@ setupJobsAPI : function(router){
 
           });
 
-          //Find all jobs for a given user.
-          router.route('/jobsForUser/:customerId')
+          //Find all jobs created by a given customer.
+          router.route('/jobsForCustomer/:customerId')
             .get(function(req, res) {
 
               Job.find({customerId : req.params.customerId}).exec(function(err, jobs) {
+                  if (err){
+                    res.send(err);
+                  }
+                  res.json(jobs);
+              });
+
+            });
+
+          //Find all jobs accepted by a given shoveler.
+          router.route('/jobsForShoveler/:shovelerId')
+            .get(function(req, res) {
+
+              Job.find({shovelerId : req.params.shovelerId}).exec(function(err, jobs) {
                   if (err){
                     res.send(err);
                   }
