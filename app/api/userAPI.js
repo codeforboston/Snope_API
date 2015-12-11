@@ -14,6 +14,7 @@ router.route('/users')
 
         //Map all of the user properties from the request to our user object:
         user.username    = req.body.username;
+        user.email       = req.body.email;
         user.firstName   = req.body.firstName;
         user.lastName    = req.body.lastName;
         user.phoneNumber = req.body.phoneNumber;
@@ -103,6 +104,26 @@ router.route('/users')
           });
       });
 
+      //Temporary login until we have auth properly built out.
+      router.route('/login')
+        .post(function(req, res) {
+
+          var email = req.body.email;
+          var password = req.body.password;
+
+          User.findOne({email : req.body.email}).exec(function(err, user) {
+              if (err || user == null){
+                res.json({statusCode:500, message: "User Not found"});
+              }
+
+              if(password == user.password){
+                res.json({statusCode: 200, message: 'successfully logged in', customerId: user._id});
+              }else{
+                res.json({statusCode:401, message: "Password incorrect. Login unsuccessful."});
+              }
+          });
+
+        });
 
     }
 
