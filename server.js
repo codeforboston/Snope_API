@@ -40,7 +40,8 @@ var router = express.Router();
 // middleware to use for all requests
 router.use(function(req, res, next) {
     // do logging / anything else that happens in middewareOPTIONS
-    console.log('Something is happening.');
+    console.log('Request received!');
+    console.log(req.body);
     next();
 });
 
