@@ -33,6 +33,7 @@ var router = express.Router();
 router.use(function(req, res, next) {
     // do logging / anything else that happens in middewareOPTIONS
     console.log('Something is happening.');
+    console.log(req.body);
     next();
 });
 
