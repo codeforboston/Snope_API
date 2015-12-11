@@ -117,7 +117,14 @@ router.route('/users')
               }
 
               if(password == user.password){
-                res.json({statusCode: 200, message: 'successfully logged in', customerId: user._id});
+                res.json(
+                  {
+                    statusCode: 200,
+                    message: 'successfully logged in',
+                    customerId: user._id,
+                    type: user.type
+                  }
+                );
               }else{
                 res.json({statusCode:401, message: "Password incorrect. Login unsuccessful."});
               }
