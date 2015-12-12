@@ -33,8 +33,8 @@ router.route('/users')
             res.json({
               statusCode : 200,
               message: 'User Account Successfully created!',
-              customerId: user._id,
-              type: user.type
+              userId: user._id,
+              userType: user.type
             });
         });
 
@@ -123,8 +123,8 @@ router.route('/users')
                   {
                     statusCode: 200,
                     message: 'successfully logged in',
-                    customerId: user._id,
-                    type: user.type
+                    userId: user._id,
+                    userType: user.type
                   }
                 );
               }else{
