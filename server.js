@@ -39,8 +39,9 @@ var router = express.Router();
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    // do logging / anything else that happens in middewareOPTIONS
-    console.log('Request received!');
+    // do logging / anything else that happens in middeware
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    console.log(req.method + ' request received to ' + fullUrl);
     console.log(req.body);
     next();
 });
