@@ -1,4 +1,5 @@
 var Job = require('./../models/job');
+var User     = require('./../models/user');
 
 module.exports = {
 
@@ -20,6 +21,7 @@ setupJobsAPI : function(router){
           job.phoneNumber = req.body.phoneNumber;
 
           job.confirmationCode = generateConfirmationCode();
+          job.jobStatus = 'open';
 
           // TODO: Get Lat/Long from Google Maps?
           // job.latitude = req.body.latitude;
@@ -83,6 +85,7 @@ setupJobsAPI : function(router){
                 if(req.body.completionTime) job.completionTime = req.body.completionTime;
                 if(req.body.phoneNumber) job.phoneNumber = req.body.phoneNumber;
                 if(req.body.imgUrl) job.imgUrl = req.body.imgUrl;
+                if(req.body.jobStatus) job.jobStatus = req.body.jobStatus;
 
                 // save the job
                 job.save(function(err) {
@@ -120,7 +123,7 @@ setupJobsAPI : function(router){
             // var lon1 = -71.051481;
             // var maxDistance = 2;
 
-            Job.find(function(err, jobs) {
+            Job.find({jobStatus: 'open'}, function(err, jobs) {
                 if (err){
                   res.send(err);
                 }
@@ -138,6 +141,7 @@ setupJobsAPI : function(router){
 
           });
 
+          //TODO: URL to get open jobs only.
           //Find all jobs created by a given customer.
           router.route('/jobsForCustomer/:customerId')
             .get(function(req, res) {
@@ -156,6 +160,46 @@ setupJobsAPI : function(router){
             .get(function(req, res) {
 
               Job.find({shovelerId : req.params.shovelerId}).exec(function(err, jobs) {
+                  if (err){
+                    res.send(err);
+                  }
+                  res.json(jobs);
+              });
+
+            });
+
+          //These are open jobs for shovelers
+          router.route('/openJobsForShoveler')
+            .get(function(req, res) {
+
+              Job.find({jobStatus: 'open'}).exec(function(err, jobs) {
+                  if (err){
+                    res.send(err);
+                  }
+                  res.json(jobs);
+              });
+
+            });
+
+          //These are previously completed jobs for shovelers
+          router.route('/completedJobsForShoveler/:shovelerId')
+            .get(function(req, res) {
+
+              Job.find({shovelerId : req.params.shovelerId, jobStatus: 'completed'}).exec(function(err, jobs) {
+                  if (err){
+                    res.send(err);
+                  }
+                  res.json(jobs);
+              });
+
+            });
+
+
+          //These are previously completed jobs for shovelers
+          router.route('/completedJobsForCustomer/:customerId')
+            .get(function(req, res) {
+
+              Job.find({customerId : req.params.customerId, jobStatus: 'completed'}).exec(function(err, jobs) {
                   if (err){
                     res.send(err);
                   }
@@ -202,6 +246,33 @@ setupJobsAPI : function(router){
               }
 
               return text;
+          }
+
+          function embedUserDetailsToJob(job){
+
+            //Find Customer details:
+            User.findById(job.customerId, function(err, user) {
+                if (err){
+                  console.log('Error getting a customer for this job');
+                }
+                job.customerFirstName = user.firstName;
+                job.customerLastName = user.lastName;
+
+                User.findById(job.shovelerId, function(err, user) {
+                    if (err){
+                      console.log('Error getting a shoveler for this job');
+                    }
+                    job.shovelerFirstName = user.firstName;
+                    job.shovelerLastName = user.lastName;
+
+                    //TODO: Add promises here to return, don't return json.
+                    res.json(users);
+                });
+
+            });
+
+
+            return job;
           }
 
     }
