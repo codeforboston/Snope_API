@@ -32,7 +32,9 @@ router.route('/users')
               }
             res.json({
               statusCode : 200,
-              message: 'User Account Successfully created!'
+              message: 'User Account Successfully created!',
+              customerId: user._id,
+              type: user.type
             });
         });
 
