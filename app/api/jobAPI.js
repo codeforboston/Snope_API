@@ -6,8 +6,8 @@ module.exports = {
   setupJobsAPI : function(router){
     // Setup the Routes / Endpoints for the jobs API
     router.route('/jobs')
-        .post(postJobs) //Create a new Job
-        .get(getJobs); //Return all jobs
+      .post(postJob) //Create a new Job
+      .get(getJobs); //Return all jobs
 
     // Endpoints for a specific Job
     router.route('/jobs/:job_id')
@@ -41,13 +41,12 @@ module.exports = {
       .get(getCompletedJobsForCustomer);
 
     //Functions to handle the above API Routes:
-    
+
     function getJobs(req, res){
       findJobMatchingParams(req, res, {}); //Empty Json selects all.
     } //End getJobs
 
-    function postJobs(req, res){
-
+    function postJob(req, res){
       var job = new Job();
       job.customerId = req.body.customerId;
       job.address = req.body.address;
@@ -61,6 +60,13 @@ module.exports = {
       job.confirmationCode = generateConfirmationCode();
       job.jobStatus = 'open';
 
+      //Save image to filesystem:
+      var base64Data = req.body.img;
+      require("fs").writeFile("uploadedImages/" + job._id + ".png", base64Data, 'base64', function(err) {
+        console.log(err);
+      });
+
+
       // TODO: Get Lat/Long from Google Maps?
       // job.latitude = req.body.latitude;
       // job.longitude = req.body.longitude;
@@ -73,7 +79,7 @@ module.exports = {
         res.json({ message: 'Job successfully created!', jobId : job._id });
       });
 
-    } // End postJobs
+    } // End postJob
 
     function getSpecificJob(req, res){
       Job.findById(req.params.job_id, function(err, job) {

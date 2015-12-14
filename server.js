@@ -29,6 +29,7 @@ if (process.argv.length > 1) {
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();
+var imageHostingRouter = express.Router();
 
 // app.all('/', function(req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
@@ -73,6 +74,12 @@ router.use(function (req, res, next) {
 // REGISTER ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
+//We are hosting images locally on this server for MVP
+//TODO: Swap out this implementation for a cloud based cdn. (S3?)
+app.use('/img', imageHostingRouter);
+var imageHosting = require('./app/api/imageHosting');
+imageHosting.enableImageHosting(imageHostingRouter);
 
 //Set up the Users API
 var userAPI = require('./app/api/userAPI');
