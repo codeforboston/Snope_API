@@ -4,7 +4,7 @@ var User = require('./../models/user');
 module.exports = {
 
   setupJobsAPI : function(router){
-    // Jobs API ----------------------------------------------------
+    // Setup the Routes / Endpoints for the jobs API
     router.route('/jobs')
         .post(postJobs) //Create a new Job
         .get(getJobs); //Return all jobs
@@ -40,70 +40,8 @@ module.exports = {
     router.route('/completedJobsForCustomer/:customerId')
       .get(getCompletedJobsForCustomer);
 
-    //Calculate distance using the haversine formula
-    function calculateDistance (lat1, lon1, lat2, lon2){
-
-      var R = 6371000; // Radius of earth
-      var φ1 = toRadians(lat1);
-      var φ2 = toRadians(lat2);
-      var Δφ = toRadians(lat2-lat1);
-      var Δλ = toRadians(lon2-lon1);
-
-      var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ/2) * Math.sin(Δλ/2);
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-      var d = R * c;
-
-      //Result is currently in metres, convert to miles and return:
-      return (d * 0.000621371).toFixed(1);
-    } // End calculateDistance
-
-    //Create ourselves a .toRadians() function for simplicty
-    function toRadians(degrees){
-      return degrees * Math.PI / 180;
-    } //End toRadians
-
-    //Create ourselves a .toRadians() function for simplicty
-    function generateConfirmationCode(){
-        var text = "";
-        var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        var possibleNums  = "0123456789";
-
-        text += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
-        for( var i=0; i < 3; i++ ){
-          text += possibleNums.charAt(Math.floor(Math.random() * possibleNums.length));
-        }
-
-        return text;
-    } //End generateConfirmationCode
-
-    function embedUserDetailsToJob(job){
-
-      //Find Customer details:
-      User.findById(job.customerId, function(err, user) {
-        if (err){
-          console.log('Error getting a customer for this job');
-        }
-        job.customerFirstName = user.firstName;
-        job.customerLastName = user.lastName;
-
-        User.findById(job.shovelerId, function(err, user) {
-            if (err){
-              console.log('Error getting a shoveler for this job');
-            }
-            job.shovelerFirstName = user.firstName;
-            job.shovelerLastName = user.lastName;
-
-            //TODO: Add promises here to return, don't return json.
-            res.json(users);
-        });
-
-      });
-      return job;
-    } //End embedUserDetailsToJob
-
+    //Functions to handle the above API Routes:
+    
     function getJobs(req, res){
       findJobMatchingParams(req, res, {}); //Empty Json selects all.
     } //End getJobs
@@ -260,6 +198,8 @@ module.exports = {
       findJobMatchingParams(req, res, jsonParams);
     } //End getCompletedJobsForCustomer
 
+    //Utility Methods:
+
     function findJobMatchingParams(req, res, jsonParams){
       Job.find(jsonParams).exec(function(err, jobs) {
         if (err){
@@ -268,7 +208,71 @@ module.exports = {
           res.json(jobs);
         }
       });
-    }
+    } //End findJobMatchingParams
+
+    //Calculate distance using the haversine formula
+    function calculateDistance (lat1, lon1, lat2, lon2){
+
+      var R = 6371000; // Radius of earth
+      var φ1 = toRadians(lat1);
+      var φ2 = toRadians(lat2);
+      var Δφ = toRadians(lat2-lat1);
+      var Δλ = toRadians(lon2-lon1);
+
+      var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+      var d = R * c;
+
+      //Result is currently in metres, convert to miles and return:
+      return (d * 0.000621371).toFixed(1);
+    } // End calculateDistance
+
+    //Create ourselves a .toRadians() function for simplicty
+    function toRadians(degrees){
+      return degrees * Math.PI / 180;
+    } //End toRadians
+
+    //Create ourselves a .toRadians() function for simplicty
+    function generateConfirmationCode(){
+        var text = "";
+        var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        var possibleNums  = "0123456789";
+
+        text += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+        for( var i=0; i < 3; i++ ){
+          text += possibleNums.charAt(Math.floor(Math.random() * possibleNums.length));
+        }
+
+        return text;
+    } //End generateConfirmationCode
+
+    function embedUserDetailsToJob(job){
+
+      //Find Customer details:
+      User.findById(job.customerId, function(err, user) {
+        if (err){
+          console.log('Error getting a customer for this job');
+        }
+        job.customerFirstName = user.firstName;
+        job.customerLastName = user.lastName;
+
+        User.findById(job.shovelerId, function(err, user) {
+            if (err){
+              console.log('Error getting a shoveler for this job');
+            }
+            job.shovelerFirstName = user.firstName;
+            job.shovelerLastName = user.lastName;
+
+            //TODO: Add promises here to return, don't return json.
+            res.json(users);
+        });
+
+      });
+      return job;
+    } //End embedUserDetailsToJob
 
   } //End setupJobsAPI
 
