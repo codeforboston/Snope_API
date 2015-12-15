@@ -285,7 +285,7 @@ module.exports = {
       User.findById(job.customerId, function(err, user) {
         if (err){
           console.log('Error getting a customer for this job');
-        }else{
+        }else if(user){
           var jobWithUserDetails = JSON.parse(JSON.stringify(job));
           jobWithUserDetails.customerFirstName = user.firstName;
           jobWithUserDetails.customerLastName = user.lastName;
@@ -293,9 +293,10 @@ module.exports = {
           User.findById(job.shovelerId, function(err, user) {
               if (err){
                 console.log('Error getting a shoveler for this job');
+              }else if(user){
+                jobWithUserDetails.shovelerFirstName = user.firstName;
+                jobWithUserDetails.shovelerLastName = user.lastName;
               }
-              jobWithUserDetails.shovelerFirstName = user.firstName;
-              jobWithUserDetails.shovelerLastName = user.lastName;
 
               res.json(jobWithUserDetails);
           });
