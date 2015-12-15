@@ -93,7 +93,7 @@ module.exports = {
         if(err){
           res.send(err);
         }else{
-          res.json(job);
+          embedUserDetailsToJob(req, res, job);
         }
       });
     } // End getSpecificJob
@@ -216,7 +216,6 @@ module.exports = {
           customerId : req.params.customerId,
           jobStatus: 'inProgress'
         };
-
         findJobMatchingParams(req, res, jsonParams);
     }
 
@@ -226,7 +225,6 @@ module.exports = {
           shovelerId : req.params.shovelerId,
           jobStatus: 'inProgress'
         };
-
         findJobMatchingParams(req, res, jsonParams);
     }
 
@@ -281,29 +279,29 @@ module.exports = {
         return text;
     } //End generateConfirmationCode
 
-    function embedUserDetailsToJob(job){
+    function embedUserDetailsToJob(req, res, job){
 
       //Find Customer details:
       User.findById(job.customerId, function(err, user) {
         if (err){
           console.log('Error getting a customer for this job');
+        }else{
+          var jobWithUserDetails = JSON.parse(JSON.stringify(job));
+          jobWithUserDetails.customerFirstName = user.firstName;
+          jobWithUserDetails.customerLastName = user.lastName;
+
+          User.findById(job.shovelerId, function(err, user) {
+              if (err){
+                console.log('Error getting a shoveler for this job');
+              }
+              jobWithUserDetails.shovelerFirstName = user.firstName;
+              jobWithUserDetails.shovelerLastName = user.lastName;
+
+              res.json(jobWithUserDetails);
+          });
         }
-        job.customerFirstName = user.firstName;
-        job.customerLastName = user.lastName;
-
-        User.findById(job.shovelerId, function(err, user) {
-            if (err){
-              console.log('Error getting a shoveler for this job');
-            }
-            job.shovelerFirstName = user.firstName;
-            job.shovelerLastName = user.lastName;
-
-            //TODO: Add promises here to return, don't return json.
-            res.json(users);
-        });
 
       });
-      return job;
     } //End embedUserDetailsToJob
 
   } //End setupJobsAPI
