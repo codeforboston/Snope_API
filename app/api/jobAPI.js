@@ -40,6 +40,13 @@ module.exports = {
     router.route('/completedJobsForCustomer/:customerId')
       .get(getCompletedJobsForCustomer);
 
+    router.route('/inProgressJobsForCustomer/:customerId')
+      .get(getInProgressJobsForCustomer);
+
+    router.route('/inProgressJobsForShoveler/:shovelerId')
+      .get(getInProgressJobsForShoveler);
+
+
     //Functions to handle the above API Routes:
 
     function getJobs(req, res){
@@ -203,6 +210,25 @@ module.exports = {
 
       findJobMatchingParams(req, res, jsonParams);
     } //End getCompletedJobsForCustomer
+
+    function inProgressJobsForCustomer(req, res) {
+        var jsonParams = {
+          customerId : req.params.customerId,
+          jobStatus: 'inProgress'
+        };
+
+        findJobMatchingParams(req, res, jsonParams);
+    }
+
+
+    function inProgressJobsForShoveler(req, res) {
+        var jsonParams = {
+          shovelerId : req.params.shovelerId,
+          jobStatus: 'inProgress'
+        };
+
+        findJobMatchingParams(req, res, jsonParams);
+    }
 
     //Utility Methods:
 
