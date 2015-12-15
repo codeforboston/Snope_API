@@ -211,7 +211,7 @@ module.exports = {
       findJobMatchingParams(req, res, jsonParams);
     } //End getCompletedJobsForCustomer
 
-    function inProgressJobsForCustomer(req, res) {
+    function getInProgressJobsForCustomer(req, res) {
         var jsonParams = {
           customerId : req.params.customerId,
           jobStatus: 'inProgress'
@@ -221,7 +221,7 @@ module.exports = {
     }
 
 
-    function inProgressJobsForShoveler(req, res) {
+    function getInProgressJobsForShoveler(req, res) {
         var jsonParams = {
           shovelerId : req.params.shovelerId,
           jobStatus: 'inProgress'
