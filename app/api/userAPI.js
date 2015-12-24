@@ -27,7 +27,9 @@ module.exports = {
       //TODO: Backend validation before blindly persisting to DB.
       //Map all of the user properties from the request to our user object:
       user.username    = req.body.username;
-      user.email       = req.body.email;
+      // force lowercase email.
+      // this shouldn't be a problem when logging in from the app, but future may open other clients.
+      user.email       = req.body.email.toLowerCase();
       user.firstName   = req.body.firstName;
       user.lastName    = req.body.lastName;
       user.phoneNumber = req.body.phoneNumber;
@@ -112,7 +114,8 @@ module.exports = {
     } //End deleteUser
 
     function handleLogin(req, res) {
-      var email = req.body.email;
+      // force lowercase on the email.
+      var email = req.body.email.toLowerCase();
       var password = req.body.password;
 
       User.findOne({email : req.body.email}).exec(function(err, user) {
