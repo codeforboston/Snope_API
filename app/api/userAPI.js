@@ -35,21 +35,29 @@ module.exports = {
       user.type        = req.body.type;
       user.password    = req.body.password;
 
-      // save the user and check for errors
-      user.save(function(err) {
-          if (err){
-              res.json({
-                statusCode : 500,
-                message    : 'There was a problem creating a new user Account.'
-              });
+      //Make sure we don't add the user to the DB if e-mail is a duplicate:
+      User.findOne({email : req.body.email}).exec(function(err, existingUser) {
+        if (existingUser != null){
+          res.json({statusCode:500, message: "User with this e-mail already exists."});
+        }else{
+          // save the user and check for errors
+          user.save(function(err) {
+            if (err){
+                res.json({
+                  statusCode : 500,
+                  message    : 'There was a problem creating a new user Account.'
+                });
             }
-          res.json({
-            statusCode : 200,
-            message: 'User Account Successfully created!',
-            userId: user._id,
-            userType: user.type
+            res.json({
+              statusCode : 200,
+              message: 'User Account Successfully created!',
+              userId: user._id,
+              userType: user.type
+            });
           });
+        }
       });
+
     } //End createUser
 
     function getAllUsers(req, res) {
